@@ -85,6 +85,7 @@ class Stream(object):
         self.headers = options.get("headers") or {}
         self.parameters = None
         self.body = None
+        self.secure = False
 
     def _run(self):
         # Authenticate
@@ -155,6 +156,9 @@ class Stream(object):
             # read data and pass into listener
             data = resp._safe_read(length+2)
             assert len(data)==length+2
+            
+            data = data[data.find("{"):]
+            
             if self.listener.on_data(data) is False:
                 self.running = False
 
